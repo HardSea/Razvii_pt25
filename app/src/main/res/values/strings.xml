@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Razvii_pt21–22</string>
+    <string name="error_main_info_not_loaded">Error main info not loaded</string>
+    <string name="error_additional_info_not_loaded">Additional main info not loaded</string>
+    <string name="user_banned_title_text">There could have been a post by user %1s, but he was banned</string>
+    <string name="warning_user_id_string">%1s With warning</string>
+</resources>
