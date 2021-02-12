@@ -10,7 +10,7 @@ import com.pmacademy.razvii_pt21.ui.PostPresenter
 import com.pmacademy.razvii_pt21.ui.PostUiModel
 import com.pmacademy.razvii_pt21.ui.PostView
 
-
+// Main Activity on new branch
 class MainActivity : AppCompatActivity(R.layout.activity_main), PostView {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
