@@ -6,7 +6,12 @@ class GetUiPostsUseCase(
     private val postUiMapper: PostUiMapper,
     private val postRepository: PostRepository
 ) {
-    fun execute(): List<PostUiModel> {
-        return postUiMapper.map(postRepository.getPostsAndUserInfo())
+    fun execute(): List<PostUiModel>? {
+        val postsFromRepository = postRepository.getPostsAndUserInfo()
+        return if (postsFromRepository != null){
+            postUiMapper.map(postsFromRepository)
+        } else {
+            null
+        }
     }
 }

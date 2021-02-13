@@ -1,14 +1,12 @@
 package com.pmacademy.razvii_pt21
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pmacademy.razvii_pt21.databinding.ActivityMainBinding
 import com.pmacademy.razvii_pt21.tools.PostComponent
-import com.pmacademy.razvii_pt21.ui.PostAdapter
-import com.pmacademy.razvii_pt21.ui.PostPresenter
-import com.pmacademy.razvii_pt21.ui.PostUiModel
-import com.pmacademy.razvii_pt21.ui.PostView
+import com.pmacademy.razvii_pt21.ui.*
 
 // Main Activity on new branch
 class MainActivity : AppCompatActivity(R.layout.activity_main), PostView {
@@ -27,6 +25,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), PostView {
         presenter.attachView(this)
 
         initRecyclerView()
+
     }
 
     private fun initRecyclerView() {
@@ -41,5 +40,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), PostView {
 
     override fun showInfo(postList: List<PostUiModel>) {
         recyclerViewPostsAdapter.showPosts(postList)
+    }
+
+    override fun showError(error: PostErrorsTypes) {
+        binding.rvPosts.visibility = View.GONE
+        binding.tvErrorText.visibility = View.VISIBLE
+        binding.tvErrorText.text = error.name
     }
 }

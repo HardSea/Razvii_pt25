@@ -1,11 +1,12 @@
 package com.pmacademy.razvii_pt21.ui
 
+import com.pmacademy.razvii_pt21.tools.Result
 import com.pmacademy.razvii_pt21.tools.threading.CancelableOperation
 import com.pmacademy.razvii_pt21.tools.threading.Multithreading
 
 interface PostView {
     fun showInfo(postList: List<PostUiModel>)
-    //fun showError(error: String)
+    fun showError(error: PostErrorsTypes)
 }
 
 class PostPresenter(
@@ -21,8 +22,13 @@ class PostPresenter(
     }
 
     private fun getPosts() {
-        multithreading.async {
-            return@async getUiPostsUseCase.execute()
+        multithreading.async<Result<List<PostUiModel>, PostErrorsTypes>> {
+            val result: List<PostUiModel>? = getUiPostsUseCase.execute()
+            return@async if (result == null){
+                Result.error(PostErrorsTypes.POSTS_NOT_LOADED)
+            } else {
+                Result.success(result)
+            }
         }.postOnMainThread(::showResult)
     }
 
@@ -31,9 +37,12 @@ class PostPresenter(
         cancelableOperation?.cancel()
     }
 
-    private fun showResult(resultList: List<PostUiModel>?) {
-        resultList?.let {
-            view?.showInfo(resultList)
+    //private fun showResult(resultList: List<PostUiModel>?) {
+    private fun showResult(resultList: Result<List<PostUiModel>, PostErrorsTypes>) {
+        if (resultList.isError){
+            view?.showError(resultList.errorResult)
+        } else {
+            view?.showInfo(resultList.successResult)
         }
 
     }

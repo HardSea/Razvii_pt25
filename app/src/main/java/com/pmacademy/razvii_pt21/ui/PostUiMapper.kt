@@ -13,10 +13,10 @@ class PostUiMapper(private val resourceRepository: ResourceRepository) {
         private const val warningUserIdString = R.string.warning_user_id_string
     }
 
-    fun map(userPostResult: List<UserPostModel>?): List<PostUiModel> {
+    fun map(userPostResult: List<UserPostModel>): List<PostUiModel> {
         val returnList = mutableListOf<PostUiModel>()
 
-        userPostResult?.forEach { userPost ->
+        userPostResult.forEach { userPost ->
             when (userPost.userStatus) {
                 UserStatusType.BANNED -> {
                     returnList.add(createBannedPostUiModel(userPost))

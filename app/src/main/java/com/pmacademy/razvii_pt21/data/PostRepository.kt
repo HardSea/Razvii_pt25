@@ -10,10 +10,13 @@ class PostRepository(
     private val postMapper: PostMapper
 ) {
     fun getPostsAndUserInfo(): List<UserPostModel>? {
-
-        val listOfPosts = postService.getPostsList().execute().body()
-        return listOfPosts?.let(
-            postMapper::map
-        )
+        return try {
+            val listOfPosts = postService.getPostsList().execute().body()
+            listOfPosts?.let(
+                postMapper::map
+            )
+        } catch (e: Exception) {
+            null
+        }
     }
 }
