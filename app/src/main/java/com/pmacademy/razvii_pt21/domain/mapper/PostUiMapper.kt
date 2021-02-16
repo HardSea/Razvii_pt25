@@ -1,18 +1,19 @@
-package com.pmacademy.razvii_pt21.ui
+package com.pmacademy.razvii_pt21.domain.mapper
 
 import com.pmacademy.razvii_pt21.R
-import com.pmacademy.razvii_pt21.domain.UserPostModel
-import com.pmacademy.razvii_pt21.domain.UserStatusType
+import com.pmacademy.razvii_pt21.data.model.UserPostModel
+import com.pmacademy.razvii_pt21.data.model.UserStatusType
 import com.pmacademy.razvii_pt21.ui.model.PostUiModel
 import com.pmacademy.razvii_pt21.ui.model.PostUiModelBanned
 import com.pmacademy.razvii_pt21.ui.model.PostUiModelNormal
+import com.pmacademy.razvii_pt21.ui.model.PostUiModelWarning
 
-class PostUiMapper(private val resourceRepository: ResourceRepository) {
+class PostUiMapper {
 
     companion object {
-        private const val backgroundWarningColor = R.color.gray
-        private const val backgroundNormalColor = R.color.white
-        private const val bannedTitleString = R.string.user_banned_title_text
+        private const val backgroundWarningColor = R.color.background_warning_post_container
+        private const val backgroundNormalColor = R.color.background_normal_container
+        private const val bannedTitleStringResource = R.string.user_banned_title_text
         private const val warningUserIdString = R.string.warning_user_id_string
     }
 
@@ -40,7 +41,8 @@ class PostUiMapper(private val resourceRepository: ResourceRepository) {
             postId = userPost.id,
             userId = userPost.userId.toString(),
             //title = resourceRepository.getString(bannedTitleString)
-            title = resourceRepository.getStringWithValue(bannedTitleString, userPost.userId.toString())
+            titleResource = bannedTitleStringResource
+            //title = resourceRepository.getStringWithValue(bannedTitleStringResource, userPost.userId.toString())
         )
     }
 
@@ -48,12 +50,15 @@ class PostUiMapper(private val resourceRepository: ResourceRepository) {
     private fun createWarningPostUiModel(
         userPost: UserPostModel
     ): PostUiModel {
-        return PostUiModelNormal(
+        return PostUiModelWarning(
             postId = userPost.id,
-            userId = resourceRepository.getStringWithValue(warningUserIdString, userPost.userId.toString()),
+            //userId = resourceRepository.getStringWithValue(warningUserIdString, userPost.userId.toString()),
+            userId = userPost.userId.toString(),
+            warningTextRes = warningUserIdString,
             title = userPost.title,
             body = userPost.body,
-            backgroundColor = resourceRepository.getColor(backgroundWarningColor)
+            backgroundColorRes = backgroundWarningColor
+            //backgroundColor = resourceRepository.getColor(backgroundWarningColor)
         )
     }
 
@@ -65,7 +70,8 @@ class PostUiMapper(private val resourceRepository: ResourceRepository) {
             userId = userPost.userId.toString(),
             title = userPost.title,
             body = userPost.body,
-            backgroundColor = resourceRepository.getColor(backgroundNormalColor)
+            backgroundColorRes = backgroundNormalColor
+            //backgroundColor = resourceRepository.getColor(backgroundNormalColor)
         )
     }
 }

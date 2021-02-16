@@ -1,13 +1,13 @@
 package com.pmacademy.razvii_pt21.data
 
-import com.pmacademy.razvii_pt21.domain.UserInfo
-import com.pmacademy.razvii_pt21.domain.UserStatusType
+import com.pmacademy.razvii_pt21.data.model.UserInfoModel
+import com.pmacademy.razvii_pt21.data.model.UserStatusType
 
 class UserInfoLocalDataProvider {
 
-    private val statusSet = mutableSetOf<UserInfo>()
+    private val statusSet = mutableSetOf<UserInfoModel>()
 
-    fun getLocalSetStatusUser(): Set<UserInfo> = statusSet
+    fun getLocalSetStatusUser(): Set<UserInfoModel> = statusSet
 
     private fun initLocalList() {
         addLocalStatusUser(3, UserStatusType.WARNING)
@@ -16,14 +16,11 @@ class UserInfoLocalDataProvider {
     }
 
     private fun addLocalStatusUser(userId: Int, userStatus: UserStatusType){
-        statusSet.add(UserInfo(userId, userStatus))
+        statusSet.add(UserInfoModel(userId, userStatus))
     }
 
     init {
         initLocalList()
     }
 
-//    fun remove(userId: Int){
-//        statusSet.removeIf { it.userId == userId }
-//    }
 }

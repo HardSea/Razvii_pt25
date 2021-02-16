@@ -1,16 +1,19 @@
-package com.pmacademy.razvii_pt21.domain
+package com.pmacademy.razvii_pt21.data.mapper
 
-import com.pmacademy.razvii_pt21.data.UserPostResponse
+import com.pmacademy.razvii_pt21.data.model.UserInfoModel
+import com.pmacademy.razvii_pt21.data.model.UserPostModel
+import com.pmacademy.razvii_pt21.data.model.UserStatusType
+import com.pmacademy.razvii_pt21.datasource.model.UserPostResponse
 
 
-class PostMapper(private val setUserStatusLocalData: Set<UserInfo>) {
+class PostMapper(private val setUserStatusLocalDatumModels: Set<UserInfoModel>) {
 
     fun map(userPostResponseResult: List<UserPostResponse>): List<UserPostModel> {
         val resultList = mutableListOf<UserPostModel>()
         userPostResponseResult.forEach { userPost ->
-            if (setUserStatusLocalData.any { it.userId == userPost.userId }) {
+            if (setUserStatusLocalDatumModels.any { it.userId == userPost.userId }) {
                 val userStatus =
-                    setUserStatusLocalData.find { it.userId == userPost.userId }?.status
+                    setUserStatusLocalDatumModels.find { it.userId == userPost.userId }?.status
                         ?: UserStatusType.NORMAL
                 resultList.add(createUserPostModel(userPost, userStatus))
             } else {

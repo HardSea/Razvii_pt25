@@ -1,4 +1,4 @@
-package com.pmacademy.razvii_pt21.domain
+package com.pmacademy.razvii_pt21.data.model
 
 data class UserPostModel(
     val userId: Int,

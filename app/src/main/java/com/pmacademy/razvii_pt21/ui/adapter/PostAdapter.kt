@@ -12,6 +12,7 @@ import com.pmacademy.razvii_pt21.R
 import com.pmacademy.razvii_pt21.ui.model.PostUiModel
 import com.pmacademy.razvii_pt21.ui.model.PostUiModelBanned
 import com.pmacademy.razvii_pt21.ui.model.PostUiModelNormal
+import com.pmacademy.razvii_pt21.ui.model.PostUiModelWarning
 
 class PostUiItemDiffCallback : DiffUtil.ItemCallback<PostUiModel>() {
     override fun areItemsTheSame(oldItem: PostUiModel, newItem: PostUiModel): Boolean {
@@ -23,17 +24,18 @@ class PostUiItemDiffCallback : DiffUtil.ItemCallback<PostUiModel>() {
     }
 }
 
-
 class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItemDiffCallback()) {
 
     enum class ViewType {
         NORMAL,
+        WARNING,
         BANNED
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is PostUiModelNormal -> ViewType.NORMAL.ordinal
+            is PostUiModelWarning -> ViewType.WARNING.ordinal
             is PostUiModelBanned -> ViewType.BANNED.ordinal
             else -> ViewType.NORMAL.ordinal
         }
@@ -50,17 +52,23 @@ class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItem
         val view = LayoutInflater.from(parent.context)
             .inflate(layout, parent, false)
 
-        return if (viewTypeEnum == ViewType.BANNED) {
-            BannedPostViewHolder(view)
-        } else {
-            NormalPostViewHolder(view)
+        return when (viewTypeEnum) {
+            ViewType.BANNED -> {
+                BannedPostViewHolder(view)
+            }
+            ViewType.WARNING -> {
+                WarningPostViewHolder(view)
+            }
+            else -> {
+                NormalPostViewHolder(view)
+            }
         }
     }
-
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is NormalPostViewHolder -> holder.bind(getItem(position) as PostUiModelNormal)
+            is WarningPostViewHolder -> holder.bind(getItem(position) as PostUiModelWarning)
             is BannedPostViewHolder -> holder.bind(getItem(position) as PostUiModelBanned)
         }
     }
@@ -69,37 +77,60 @@ class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItem
         this.submitList(lists)
     }
 
-}
 
-class NormalPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    private var tvUserId: TextView? = null
-    private var tvTitle: TextView? = null
-    private var tvBody: TextView? = null
-    private var container: LinearLayout? = null
+    class NormalPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private var tvUserId: TextView? = null
+        private var tvTitle: TextView? = null
+        private var tvBody: TextView? = null
+        private var container: LinearLayout? = null
 
-    init {
-        tvUserId = view.findViewById(R.id.tv_user_id)
-        tvTitle = view.findViewById(R.id.tv_title)
-        tvBody = view.findViewById(R.id.tv_body)
-        container = view.findViewById(R.id.container)
+        init {
+            tvUserId = view.findViewById(R.id.tv_user_id)
+            tvTitle = view.findViewById(R.id.tv_title)
+            tvBody = view.findViewById(R.id.tv_body)
+            container = view.findViewById(R.id.container)
+        }
+
+        fun bind(post: PostUiModelNormal) {
+            tvUserId?.text = post.userId
+            tvTitle?.text = post.title
+            tvBody?.text = post.body
+            container?.setBackgroundColor(itemView.context.getColor(post.backgroundColorRes))
+        }
     }
 
-    fun bind(post: PostUiModelNormal) {
-        tvUserId?.text = post.userId
-        tvTitle?.text = post.title
-        tvBody?.text = post.body
-        container?.setBackgroundColor(post.backgroundColor)
+
+    class WarningPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private var tvUserId: TextView? = null
+        private var tvTitle: TextView? = null
+        private var tvBody: TextView? = null
+        private var container: LinearLayout? = null
+
+        init {
+            tvUserId = view.findViewById(R.id.tv_user_id)
+            tvTitle = view.findViewById(R.id.tv_title)
+            tvBody = view.findViewById(R.id.tv_body)
+            container = view.findViewById(R.id.container)
+        }
+
+        fun bind(post: PostUiModelWarning) {
+            tvUserId?.text = itemView.context.getString(post.warningTextRes, post.userId)
+            tvTitle?.text = post.title
+            tvBody?.text = post.body
+            container?.setBackgroundColor(itemView.context.getColor(post.backgroundColorRes))
+        }
     }
-}
 
-class BannedPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    private var tvTitle: TextView? = null
 
-    init {
-        tvTitle = view.findViewById(R.id.tv_title)
-    }
+    class BannedPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private var tvTitle: TextView? = null
 
-    fun bind(post: PostUiModelBanned) {
-        tvTitle?.text = post.title
+        init {
+            tvTitle = view.findViewById(R.id.tv_title)
+        }
+
+        fun bind(post: PostUiModelBanned) {
+            tvTitle?.text = itemView.context.getString(post.titleResource, post.userId)
+        }
     }
 }

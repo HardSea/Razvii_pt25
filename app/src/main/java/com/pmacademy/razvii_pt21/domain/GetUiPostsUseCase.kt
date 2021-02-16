@@ -1,6 +1,7 @@
-package com.pmacademy.razvii_pt21.ui
+package com.pmacademy.razvii_pt21.domain
 
-import com.pmacademy.razvii_pt21.data.PostRepository
+import com.pmacademy.razvii_pt21.data.repository.PostRepository
+import com.pmacademy.razvii_pt21.domain.mapper.PostUiMapper
 import com.pmacademy.razvii_pt21.ui.model.PostUiModel
 
 class GetUiPostsUseCase(

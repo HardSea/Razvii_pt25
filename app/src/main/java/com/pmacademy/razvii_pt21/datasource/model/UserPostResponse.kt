@@ -1,4 +1,4 @@
-package com.pmacademy.razvii_pt21.data
+package com.pmacademy.razvii_pt21.datasource.model
 
 import com.google.gson.annotations.SerializedName
 
