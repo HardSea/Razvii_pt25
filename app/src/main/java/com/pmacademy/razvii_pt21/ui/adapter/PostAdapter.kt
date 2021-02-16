@@ -1,4 +1,4 @@
-package com.pmacademy.razvii_pt21.ui
+package com.pmacademy.razvii_pt21.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.pmacademy.razvii_pt21.R
+import com.pmacademy.razvii_pt21.ui.model.PostUiModel
+import com.pmacademy.razvii_pt21.ui.model.PostUiModelBanned
+import com.pmacademy.razvii_pt21.ui.model.PostUiModelNormal
 
 class PostUiItemDiffCallback : DiffUtil.ItemCallback<PostUiModel>() {
     override fun areItemsTheSame(oldItem: PostUiModel, newItem: PostUiModel): Boolean {
@@ -62,10 +65,9 @@ class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItem
         }
     }
 
-    fun showPosts(list: List<PostUiModel>) {
-        this.submitList(list)
+    fun updatePosts(lists: List<PostUiModel>) {
+        this.submitList(lists)
     }
-
 
 }
 

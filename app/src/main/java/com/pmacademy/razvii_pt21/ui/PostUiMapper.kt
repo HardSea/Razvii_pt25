@@ -3,6 +3,9 @@ package com.pmacademy.razvii_pt21.ui
 import com.pmacademy.razvii_pt21.R
 import com.pmacademy.razvii_pt21.domain.UserPostModel
 import com.pmacademy.razvii_pt21.domain.UserStatusType
+import com.pmacademy.razvii_pt21.ui.model.PostUiModel
+import com.pmacademy.razvii_pt21.ui.model.PostUiModelBanned
+import com.pmacademy.razvii_pt21.ui.model.PostUiModelNormal
 
 class PostUiMapper(private val resourceRepository: ResourceRepository) {
 

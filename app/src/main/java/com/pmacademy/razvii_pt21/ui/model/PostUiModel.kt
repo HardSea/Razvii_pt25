@@ -1,4 +1,4 @@
-package com.pmacademy.razvii_pt21.ui
+package com.pmacademy.razvii_pt21.ui.model
 
 //import androidx.annotation.ColorInt
 //

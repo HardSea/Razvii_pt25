@@ -3,6 +3,7 @@ package com.pmacademy.razvii_pt21.ui
 import com.pmacademy.razvii_pt21.tools.Result
 import com.pmacademy.razvii_pt21.tools.threading.CancelableOperation
 import com.pmacademy.razvii_pt21.tools.threading.Multithreading
+import com.pmacademy.razvii_pt21.ui.model.PostUiModel
 
 interface PostView {
     fun showInfo(postList: List<PostUiModel>)
