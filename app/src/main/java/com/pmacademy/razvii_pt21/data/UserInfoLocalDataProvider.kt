@@ -15,7 +15,7 @@ class UserInfoLocalDataProvider {
         addLocalStatusUser(7, UserStatusType.BANNED)
     }
 
-    private fun addLocalStatusUser(userId: Int, userStatus: UserStatusType){
+    private fun addLocalStatusUser(userId: Int, userStatus: UserStatusType) {
         statusSet.add(UserInfoModel(userId, userStatus))
     }
 

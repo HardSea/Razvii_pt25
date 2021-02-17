@@ -40,9 +40,7 @@ class PostUiMapper {
         return PostUiModelBanned(
             postId = userPost.id,
             userId = userPost.userId.toString(),
-            //title = resourceRepository.getString(bannedTitleString)
             titleResource = bannedTitleStringResource
-            //title = resourceRepository.getStringWithValue(bannedTitleStringResource, userPost.userId.toString())
         )
     }
 
@@ -52,13 +50,11 @@ class PostUiMapper {
     ): PostUiModel {
         return PostUiModelWarning(
             postId = userPost.id,
-            //userId = resourceRepository.getStringWithValue(warningUserIdString, userPost.userId.toString()),
             userId = userPost.userId.toString(),
             warningTextRes = warningUserIdString,
             title = userPost.title,
             body = userPost.body,
             backgroundColorRes = backgroundWarningColor
-            //backgroundColor = resourceRepository.getColor(backgroundWarningColor)
         )
     }
 
@@ -71,7 +67,6 @@ class PostUiMapper {
             title = userPost.title,
             body = userPost.body,
             backgroundColorRes = backgroundNormalColor
-            //backgroundColor = resourceRepository.getColor(backgroundNormalColor)
         )
     }
 }

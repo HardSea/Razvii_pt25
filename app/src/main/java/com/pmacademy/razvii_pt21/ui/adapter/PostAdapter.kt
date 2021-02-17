@@ -74,7 +74,7 @@ class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItem
     }
 
     fun updatePosts(lists: List<PostUiModel>) {
-        this.submitList(lists)
+         this.submitList(lists)
     }
 
     class NormalPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {

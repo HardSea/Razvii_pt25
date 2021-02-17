@@ -13,38 +13,25 @@ class PostRepository(
     private val postMapper: PostMapper
 ) {
 
-    fun insertUserPostList(userPost: UserPost) =
-        userPostsDatabase.getUserPostDao().insertUserPostFromApi(userPost)
+    private fun insertUserPostFromApi(userPost: UserPost) =
+        userPostsDatabase.getUserPostDao().insertUserPost(userPost)
 
-//    suspend fun updateUserPost(userPost: UserPost) =
-//        userPostsDatabase.getUserPostDao().updateUserPost(userPost)
-//
-//    suspend fun deleteUserPost(userPost: UserPost) =
-//        userPostsDatabase.getUserPostDao().deleteUserPost(userPost)
-//
-//    suspend fun deleteUserPostById(id: Int) = userPostsDatabase.getUserPostDao().deleteUserPostById(id)
-//
-//    suspend fun clearUserPosts() = userPostsDatabase.getUserPostDao().clearUserPost()
+    fun insertUserPostLocal(userId: Int, title: String, body: String) {
+        userPostsDatabase.getUserPostDao().insertUserPost(
+            UserPost(
+                id = userPostsDatabase.getUserPostDao().getMinLocalUserPostId() - 1,
+                userId = userId,
+                title = title,
+                body = body
+            )
+        )
+    }
 
     private fun getAllLocalUserPosts(): List<UserPost> =
         userPostsDatabase.getUserPostDao().getAllUserPosts()
 
-//    fun getPostsAndUserInfo(): List<UserPostModel>? {
-//        return try {
-//            val listOfPosts = postsReposApi.getPostsList().execute().body()
-//
-//            listOfPosts?.let(
-//                postMapper::map
-//            )
-//        } catch (e: Exception) {
-//            null
-//        }
-//    }
-
-
     fun getPostsAndUserInfo(): List<UserPostModel>? {
-        // TODO delete == 1
-        return if (getAllLocalUserPosts().isEmpty() || getAllLocalUserPosts().size == 1) {
+        return if (getAllLocalUserPosts().isEmpty()) {
             try {
                 val listOfPosts = postsReposApi.getPostsList().execute().body()
                 saveDataToLocal(listOfPosts)
@@ -58,16 +45,12 @@ class PostRepository(
             return getAllLocalUserPosts().let(
                 postMapper::map
             )
-            //Log.d("TAG", "getPostsAndUserInfo: ${getAllLocalUserPosts()}")
-            //Log.d("TAG", "getPostsAndUserInfo: NULL")
-
         }
-
     }
 
     private fun saveDataToLocal(listOfPosts: List<UserPostResponse>?) {
         listOfPosts?.forEach { userPostResponse ->
-            insertUserPostList(
+            insertUserPostFromApi(
                 UserPost(
                     id = userPostResponse.id + 1000,
                     title = userPostResponse.title,
@@ -79,22 +62,4 @@ class PostRepository(
         }
     }
 
-
 }
-
-//class PostRepository(
-//    private val postsReposApi: PostsReposApi,
-//    private val postMapper: PostMapper
-//) {
-//    fun getPostsAndUserInfo(): List<UserPostModel>? {
-//        return try {
-//            val listOfPosts = postsReposApi.getPostsList().execute().body()
-//
-//            listOfPosts?.let(
-//                postMapper::map
-//            )
-//        } catch (e: Exception) {
-//            null
-//        }
-//    }
-//}

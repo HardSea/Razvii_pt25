@@ -86,7 +86,6 @@ abstract class UserPostsDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) = Room.databaseBuilder(
             context,
             UserPostsDatabase::class.java, "user_post_list.db"
-        )
-            .build()
+        ).build()
     }
 }

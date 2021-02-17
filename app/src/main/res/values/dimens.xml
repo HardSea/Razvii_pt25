@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="body_min_height_size">250dp</dimen>
+    <dimen name="btn_create_post_margin">16dp</dimen>
+    <dimen name="normal_holder_post_item_margin">8dp</dimen>
+    <dimen name="banned_holder_post_item_margin">24dp</dimen>
+</resources>

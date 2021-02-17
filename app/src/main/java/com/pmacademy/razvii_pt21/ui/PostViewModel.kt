@@ -8,9 +8,9 @@ import com.google.gson.GsonBuilder
 import com.pmacademy.razvii_pt21.data.UserInfoLocalDataProvider
 import com.pmacademy.razvii_pt21.data.mapper.PostMapper
 import com.pmacademy.razvii_pt21.data.repository.PostRepository
-import com.pmacademy.razvii_pt21.datasource.local.UserPost
 import com.pmacademy.razvii_pt21.datasource.local.UserPostsDatabase
 import com.pmacademy.razvii_pt21.datasource.remote.api.PostsReposApi
+import com.pmacademy.razvii_pt21.domain.CheckPostRulesUseCase
 import com.pmacademy.razvii_pt21.domain.GetUiPostsUseCase
 import com.pmacademy.razvii_pt21.domain.mapper.PostUiMapper
 import com.pmacademy.razvii_pt21.ui.model.PostUiModel
@@ -21,7 +21,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class PostViewModel(private val localUserPostDatabase: UserPostsDatabase) : ViewModel() {
+class PostViewModel(localUserPostDatabase: UserPostsDatabase) : ViewModel() {
 
     private val _postsLiveData = MutableLiveData<List<PostUiModel>>()
     val postsLiveData: LiveData<List<PostUiModel>> = _postsLiveData
@@ -42,25 +42,23 @@ class PostViewModel(private val localUserPostDatabase: UserPostsDatabase) : View
         userPostsDatabase = localUserPostDatabase
     )
 
-
     private val getPostsUseCase: GetUiPostsUseCase = GetUiPostsUseCase(
         postUiMapper = PostUiMapper(),
         repository
     )
 
-    fun insertPost(userPost: UserPost) {
+    private fun insertPost(userId: Int, title: String, body: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertUserPostList(userPost)
+            repository.insertUserPostLocal(userId, title, body)
         }
         getPosts()
     }
-
 
     fun getPosts() {
         viewModelScope.launch(Dispatchers.IO) {
 
             //val result = null
-            val result = getPostsUseCase.execute()
+            val result = getPostsUseCase.invoke()
 
             withContext(Dispatchers.Main) {
 
@@ -71,15 +69,17 @@ class PostViewModel(private val localUserPostDatabase: UserPostsDatabase) : View
         }
     }
 
+    fun createPost(title: String, body: String, userId: Int): Boolean {
+        return if (CheckPostRulesUseCase(title, body).invoke() && userId > 0) {
+            insertPost(
+                userId = userId,
+                title = title,
+                body = body
+            )
+            true
+        } else {
+            false
+        }
 
-//    suspend fun updateNote(userPost: UserPost) = repository.updateUserPost(userPost)
-//
-//    suspend fun deleteNote(userPost: UserPost) = repository.deleteUserPost(userPost)
-//
-//    suspend fun deleteNoteById(id: Int) = repository.deleteUserPostById(id)
-//
-//    suspend fun clearNote() = repository.clearUserPosts()
-//
-//    suspend fun getAllNotes() = repository.getPostsAndUserInfo()
-
+    }
 }

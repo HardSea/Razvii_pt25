@@ -5,4 +5,9 @@
     <string name="user_banned_title_text">There could have been a post by user %1s, but he was banned</string>
     <string name="warning_user_id_string">%1s With warning</string>
     <string name="create_new_post">Create new post</string>
+    <string name="user_id_hint_edit_text">User id</string>
+    <string name="default_user_id">2</string>
+    <string name="post_title_hint_edit_text">Post title</string>
+    <string name="post_body_hint_edit_text">Post body</string>
+    <string name="btn_create_post_text">Create Post</string>
 </resources>

@@ -4,7 +4,6 @@ import com.pmacademy.razvii_pt21.data.model.UserInfoModel
 import com.pmacademy.razvii_pt21.data.model.UserPostModel
 import com.pmacademy.razvii_pt21.data.model.UserStatusType
 import com.pmacademy.razvii_pt21.datasource.local.UserPost
-import com.pmacademy.razvii_pt21.datasource.remote.model.UserPostResponse
 
 
 class PostMapper(private val setUserStatusLocalDataModels: Set<UserInfoModel>) {
