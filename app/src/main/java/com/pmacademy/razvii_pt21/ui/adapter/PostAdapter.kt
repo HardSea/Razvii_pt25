@@ -77,7 +77,6 @@ class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItem
         this.submitList(lists)
     }
 
-
     class NormalPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private var tvUserId: TextView? = null
         private var tvTitle: TextView? = null

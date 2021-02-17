@@ -3,17 +3,18 @@ package com.pmacademy.razvii_pt21.data.mapper
 import com.pmacademy.razvii_pt21.data.model.UserInfoModel
 import com.pmacademy.razvii_pt21.data.model.UserPostModel
 import com.pmacademy.razvii_pt21.data.model.UserStatusType
-import com.pmacademy.razvii_pt21.datasource.model.UserPostResponse
+import com.pmacademy.razvii_pt21.datasource.local.UserPost
+import com.pmacademy.razvii_pt21.datasource.remote.model.UserPostResponse
 
 
-class PostMapper(private val setUserStatusLocalDatumModels: Set<UserInfoModel>) {
+class PostMapper(private val setUserStatusLocalDataModels: Set<UserInfoModel>) {
 
-    fun map(userPostResponseResult: List<UserPostResponse>): List<UserPostModel> {
+    fun map(userPostResponseResult: List<UserPost>): List<UserPostModel> {
         val resultList = mutableListOf<UserPostModel>()
         userPostResponseResult.forEach { userPost ->
-            if (setUserStatusLocalDatumModels.any { it.userId == userPost.userId }) {
+            if (setUserStatusLocalDataModels.any { it.userId == userPost.userId }) {
                 val userStatus =
-                    setUserStatusLocalDatumModels.find { it.userId == userPost.userId }?.status
+                    setUserStatusLocalDataModels.find { it.userId == userPost.userId }?.status
                         ?: UserStatusType.NORMAL
                 resultList.add(createUserPostModel(userPost, userStatus))
             } else {
@@ -24,7 +25,7 @@ class PostMapper(private val setUserStatusLocalDatumModels: Set<UserInfoModel>) 
     }
 
     private fun createUserPostModel(
-        userPostResponse: UserPostResponse,
+        userPostResponse: UserPost,
         userStatusType: UserStatusType = UserStatusType.NORMAL
     ): UserPostModel = UserPostModel(
         userPostResponse.userId,

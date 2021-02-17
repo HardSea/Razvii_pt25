@@ -1,6 +1,6 @@
-package com.pmacademy.razvii_pt21.datasource.api
+package com.pmacademy.razvii_pt21.datasource.remote.api
 
-import com.pmacademy.razvii_pt21.datasource.model.UserPostResponse
+import com.pmacademy.razvii_pt21.datasource.remote.model.UserPostResponse
 import retrofit2.Call
 import retrofit2.http.GET
 
