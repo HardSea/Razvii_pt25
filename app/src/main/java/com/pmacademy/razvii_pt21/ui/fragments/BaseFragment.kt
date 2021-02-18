@@ -9,6 +9,4 @@ abstract class BaseFragment(layoutId: Int) : Fragment(layoutId) {
     protected val navigator: FragmentNavigator by lazy {
         (requireActivity() as MainActivity).fragmentNavigator
     }
-
-
 }

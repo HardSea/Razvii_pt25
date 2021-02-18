@@ -14,7 +14,6 @@ class FragmentNavigator(
         fragmentManager.beginTransaction()
             .replace(container, PostListFragment.newInstance())
             .commit()
-
     }
 
     fun showCreatePostFragment() {
@@ -23,5 +22,4 @@ class FragmentNavigator(
             .addToBackStack(null)
             .commit()
     }
-
 }

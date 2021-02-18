@@ -25,7 +25,6 @@ class PostUiItemDiffCallback : DiffUtil.ItemCallback<PostUiModel>() {
 }
 
 class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItemDiffCallback()) {
-
     enum class ViewType {
         NORMAL,
         WARNING,
@@ -74,7 +73,7 @@ class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItem
     }
 
     fun updatePosts(lists: List<PostUiModel>) {
-         this.submitList(lists)
+        this.submitList(lists)
     }
 
     class NormalPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -119,7 +118,6 @@ class PostAdapter : ListAdapter<PostUiModel, RecyclerView.ViewHolder>(PostUiItem
             container?.setBackgroundColor(itemView.context.getColor(post.backgroundColorRes))
         }
     }
-
 
     class BannedPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private var tvTitle: TextView? = null

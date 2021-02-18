@@ -2,7 +2,6 @@ package com.pmacademy.razvii_pt21.domain
 
 import java.util.*
 
-
 class CheckPostRulesUseCase(
     private val postTitle: String,
     private val postBody: String,
@@ -27,6 +26,5 @@ class CheckPostRulesUseCase(
             }
         }
         return true
-
     }
 }

@@ -6,8 +6,9 @@ import com.pmacademy.razvii_pt21.datasource.local.UserPost
 import com.pmacademy.razvii_pt21.datasource.local.UserPostsDatabase
 import com.pmacademy.razvii_pt21.datasource.remote.api.PostsReposApi
 import com.pmacademy.razvii_pt21.datasource.remote.model.UserPostResponse
+import javax.inject.Inject
 
-class PostRepository(
+class PostRepository @Inject constructor(
     private val userPostsDatabase: UserPostsDatabase,
     private val postsReposApi: PostsReposApi,
     private val postMapper: PostMapper

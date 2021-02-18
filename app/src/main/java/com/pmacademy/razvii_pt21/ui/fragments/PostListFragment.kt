@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pmacademy.razvii_pt21.R
 import com.pmacademy.razvii_pt21.databinding.PostListFragmentBinding
-import com.pmacademy.razvii_pt21.datasource.local.UserPostsDatabase
+import com.pmacademy.razvii_pt21.di.AppModule
+import com.pmacademy.razvii_pt21.di.DaggerAppComponent
 import com.pmacademy.razvii_pt21.ui.PostViewModel
 import com.pmacademy.razvii_pt21.ui.PostViewModelFactory
 import com.pmacademy.razvii_pt21.ui.adapter.PostAdapter
@@ -16,11 +17,11 @@ import com.pmacademy.razvii_pt21.ui.model.PostUiModel
 
 class PostListFragment : BaseFragment(R.layout.post_list_fragment) {
 
-    private lateinit var binding: PostListFragmentBinding
-    private lateinit var viewModel: PostViewModel
-    private lateinit var localUserPostDatabase: UserPostsDatabase
+
     private lateinit var factory: PostViewModelFactory
 
+    private lateinit var binding: PostListFragmentBinding
+    private lateinit var viewModel: PostViewModel
     private val recyclerViewPostsAdapter = PostAdapter()
 
     override fun onCreateView(
@@ -32,15 +33,18 @@ class PostListFragment : BaseFragment(R.layout.post_list_fragment) {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        localUserPostDatabase = UserPostsDatabase(view.context)
-        factory = PostViewModelFactory(localUserPostDatabase)
-        viewModel = ViewModelProvider(this, factory)[PostViewModel::class.java]
-        viewModel.getPosts()
+        factory = DaggerAppComponent
+            .builder()
+            .appModule(AppModule(requireContext()))
+            .build()
+            .getPostViewFactory()
 
+        viewModel = ViewModelProvider(this, factory)[PostViewModel::class.java]
+
+        viewModel.getPosts()
         setupListeners()
         observePosts()
         initRecyclerView()
@@ -76,5 +80,4 @@ class PostListFragment : BaseFragment(R.layout.post_list_fragment) {
             return PostListFragment().apply { }
         }
     }
-
 }

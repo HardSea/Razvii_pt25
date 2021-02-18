@@ -4,9 +4,10 @@ import com.pmacademy.razvii_pt21.data.model.UserInfoModel
 import com.pmacademy.razvii_pt21.data.model.UserPostModel
 import com.pmacademy.razvii_pt21.data.model.UserStatusType
 import com.pmacademy.razvii_pt21.datasource.local.UserPost
+import javax.inject.Inject
 
 
-class PostMapper(private val setUserStatusLocalDataModels: Set<UserInfoModel>) {
+class PostMapper @Inject constructor(private val setUserStatusLocalDataModels: Set<UserInfoModel>) {
 
     fun map(userPostResponseResult: List<UserPost>): List<UserPostModel> {
         val resultList = mutableListOf<UserPostModel>()
