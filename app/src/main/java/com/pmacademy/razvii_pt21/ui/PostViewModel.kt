@@ -37,7 +37,7 @@ class PostViewModel @Inject constructor(private val repository: PostRepository) 
 
             withContext(Dispatchers.Main) {
                 result.also { posts ->
-                    _postsLiveData.postValue(posts)
+                    _postsLiveData.value = posts
                 }
             }
         }

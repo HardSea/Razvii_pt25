@@ -12,16 +12,24 @@ class PostMapper @Inject constructor(private val setUserStatusLocalDataModels: S
     fun map(userPostResponseResult: List<UserPost>): List<UserPostModel> {
         val resultList = mutableListOf<UserPostModel>()
         userPostResponseResult.forEach { userPost ->
-            if (setUserStatusLocalDataModels.any { it.userId == userPost.userId }) {
-                val userStatus =
-                    setUserStatusLocalDataModels.find { it.userId == userPost.userId }?.status
-                        ?: UserStatusType.NORMAL
-                resultList.add(createUserPostModel(userPost, userStatus))
+            if (areUserInLocalData(userPost)) {
+                resultList.add(createUserPostModel(userPost, getUserStatusFromLocal(userPost)))
             } else {
                 resultList.add(createUserPostModel(userPost))
             }
         }
         return resultList
+    }
+
+    private fun areUserInLocalData(userPost: UserPost): Boolean {
+        return setUserStatusLocalDataModels.any { localUserPost ->
+            localUserPost.userId == userPost.userId
+        }
+    }
+
+    private fun getUserStatusFromLocal(userPost: UserPost): UserStatusType {
+        return setUserStatusLocalDataModels.find { it.userId == userPost.userId }?.status
+            ?: UserStatusType.NORMAL
     }
 
     private fun createUserPostModel(

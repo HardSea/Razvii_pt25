@@ -6,67 +6,54 @@ import com.pmacademy.razvii_pt21.data.model.UserStatusType
 import com.pmacademy.razvii_pt21.ui.model.PostUiModel
 import com.pmacademy.razvii_pt21.ui.model.PostUiModelBanned
 import com.pmacademy.razvii_pt21.ui.model.PostUiModelNormal
-import com.pmacademy.razvii_pt21.ui.model.PostUiModelWarning
 
 class PostUiMapper {
 
     companion object {
-        private const val backgroundWarningColor = R.color.background_warning_post_container
-        private const val backgroundNormalColor = R.color.background_normal_container
-        private const val bannedTitleStringResource = R.string.user_banned_title_text
-        private const val warningUserIdString = R.string.warning_user_id_string
+        private const val bannedTitleString =
+            "There could have been a post by user %1s, but he was banned"
+        private const val warningUserIdString = "With warning"
     }
 
     fun map(userPostResult: List<UserPostModel>): List<PostUiModel> {
         val returnList = mutableListOf<PostUiModel>()
-
         userPostResult.forEach { userPost ->
             when (userPost.userStatus) {
-                UserStatusType.BANNED -> {
-                    returnList.add(createBannedPostUiModel(userPost))
-                }
-                UserStatusType.WARNING -> {
-                    returnList.add(createWarningPostUiModel(userPost))
-                }
-                UserStatusType.NORMAL -> {
-                    returnList.add(createNormalPostUiModel(userPost))
-                }
+                UserStatusType.BANNED -> returnList.add(createBannedPostUiModel(userPost))
+                UserStatusType.WARNING -> returnList.add(createNormalPostUiModel(userPost))
+                UserStatusType.NORMAL -> returnList.add(createNormalPostUiModel(userPost))
             }
         }
         return returnList
+    }
+
+    private fun createNormalPostUiModel(
+        userPost: UserPostModel
+    ): PostUiModel {
+
+        val backgroundColorRes = when (userPost.userStatus) {
+            UserStatusType.NORMAL -> R.color.background_normal_container
+            else -> R.color.background_warning_post_container
+        }
+        val userId = when (userPost.userStatus) {
+            UserStatusType.NORMAL -> "${userPost.userId}"
+            else -> "${userPost.userId} $warningUserIdString"
+        }
+
+        return PostUiModelNormal(
+            postId = userPost.id,
+            userId = userId,
+            title = userPost.title,
+            body = userPost.body,
+            backgroundColorRes = backgroundColorRes
+        )
     }
 
     private fun createBannedPostUiModel(userPost: UserPostModel): PostUiModel {
         return PostUiModelBanned(
             postId = userPost.id,
             userId = userPost.userId.toString(),
-            titleResource = bannedTitleStringResource
-        )
-    }
-
-
-    private fun createWarningPostUiModel(
-        userPost: UserPostModel
-    ): PostUiModel {
-        return PostUiModelWarning(
-            postId = userPost.id,
-            userId = userPost.userId.toString(),
-            warningTextRes = warningUserIdString,
-            title = userPost.title,
-            body = userPost.body,
-            backgroundColorRes = backgroundWarningColor
-        )
-    }
-
-    private fun createNormalPostUiModel(
-        userPost: UserPostModel
-    ): PostUiModel {
-        return PostUiModelNormal(
-            postId = userPost.id,
-            userId = userPost.userId.toString(),
-            title = userPost.title,
-            body = userPost.body,
-            backgroundColorRes = backgroundNormalColor
+            title = bannedTitleString.format(userPost.userId)
         )
     }
 }

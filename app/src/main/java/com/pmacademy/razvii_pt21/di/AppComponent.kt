@@ -12,5 +12,5 @@ interface AppComponent {
 
     fun context(): Context
     fun getPostViewFactory(): PostViewModelFactory
-// inject fun don`t create lateinit variables
+// inject fun don`t create late init variables
 }
