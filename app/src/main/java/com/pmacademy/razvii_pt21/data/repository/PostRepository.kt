@@ -6,7 +6,11 @@ import com.pmacademy.razvii_pt21.datasource.local.UserPost
 import com.pmacademy.razvii_pt21.datasource.local.UserPostsDatabase
 import com.pmacademy.razvii_pt21.datasource.remote.api.PostsReposApi
 import com.pmacademy.razvii_pt21.datasource.remote.model.UserPostResponse
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+
 
 class PostRepository @Inject constructor(
     private val userPostsDatabase: UserPostsDatabase,
@@ -14,38 +18,37 @@ class PostRepository @Inject constructor(
     private val postMapper: PostMapper
 ) {
 
-    private fun insertUserPostFromApi(userPost: UserPost) =
-        userPostsDatabase.getUserPostDao().insertUserPost(userPost)
+    private fun insertUserPostFromApi(userPost: UserPost) {
+        Completable.fromRunnable {
+            userPostsDatabase.getUserPostDao().insertUserPost(userPost)
+        }.subscribeOn(Schedulers.io()).subscribe()
+    }
 
     fun insertUserPostLocal(userId: Int, title: String, body: String) {
-        userPostsDatabase.getUserPostDao().insertUserPost(
-            UserPost(
+        Completable.fromRunnable {
+            val insertUser = UserPost(
                 id = userPostsDatabase.getUserPostDao().getMinLocalUserPostId() - 1,
                 userId = userId,
                 title = title,
                 body = body
             )
-        )
+            userPostsDatabase.getUserPostDao().insertUserPost(insertUser)
+        }.subscribeOn(Schedulers.io()).subscribe()
     }
 
-    private fun getAllLocalUserPosts(): List<UserPost> =
+    private fun getAllLocalUserPosts(): Observable<List<UserPost>> =
         userPostsDatabase.getUserPostDao().getAllUserPosts()
 
-    fun getPostsAndUserInfo(): List<UserPostModel>? {
-        return if (getAllLocalUserPosts().isEmpty()) {
+    fun getPostsAndUserInfo(): Observable<List<UserPostModel>>? {
+        return if (getAllLocalUserPosts().blockingFirst().isEmpty()) {
             try {
-                val listOfPosts = postsReposApi.getPostsList().execute().body()
-                saveDataToLocal(listOfPosts)
-                getAllLocalUserPosts().let(
-                    postMapper::map
-                )
+                saveDataToLocal(postsReposApi.getPostsList().blockingFirst())
+                getAllLocalUserPosts().map { postMapper.map(it) }
             } catch (e: Exception) {
                 null
             }
         } else {
-            return getAllLocalUserPosts().let(
-                postMapper::map
-            )
+            return this.getAllLocalUserPosts().map { postMapper.map(it) }
         }
     }
 
@@ -59,8 +62,7 @@ class PostRepository @Inject constructor(
                     userId = userPostResponse.userId
                 )
             )
-
         }
     }
-
 }
+

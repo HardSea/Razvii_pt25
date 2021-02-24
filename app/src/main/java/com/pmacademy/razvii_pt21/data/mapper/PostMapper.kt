@@ -9,6 +9,7 @@ import javax.inject.Inject
 
 class PostMapper @Inject constructor(private val setUserStatusLocalDataModels: Set<UserInfoModel>) {
 
+
     fun map(userPostResponseResult: List<UserPost>): List<UserPostModel> {
         val resultList = mutableListOf<UserPostModel>()
         userPostResponseResult.forEach { userPost ->
