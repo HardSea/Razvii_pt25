@@ -55,7 +55,7 @@ class CreatePostFragment : BaseFragment(R.layout.create_post_fragment) {
         ) {
             activity?.onBackPressed()
         } else {
-            Toast.makeText(requireContext(), "Error. Please, check inputs", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), getString(R.string.error_text_inputs), Toast.LENGTH_SHORT)
                 .show()
         }
     }

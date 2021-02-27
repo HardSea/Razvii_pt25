@@ -9,4 +9,5 @@
     <string name="post_title_hint_edit_text">Post title</string>
     <string name="post_body_hint_edit_text">Post body</string>
     <string name="btn_create_post_text">Create Post</string>
+    <string name="error_text_inputs">Error. Please, check inputs</string>
 </resources>
