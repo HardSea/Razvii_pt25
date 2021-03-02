@@ -5,19 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import com.pmacademy.razvii_pt21.Application
 import com.pmacademy.razvii_pt21.R
 import com.pmacademy.razvii_pt21.databinding.CreatePostFragmentBinding
-import com.pmacademy.razvii_pt21.di.AppModule
-import com.pmacademy.razvii_pt21.di.DaggerAppComponent
 import com.pmacademy.razvii_pt21.ui.PostViewModel
-import com.pmacademy.razvii_pt21.ui.PostViewModelFactory
+import javax.inject.Inject
 
 class CreatePostFragment : BaseFragment(R.layout.create_post_fragment) {
 
     private lateinit var binding: CreatePostFragmentBinding
-    private lateinit var viewModel: PostViewModel
-    private lateinit var factory: PostViewModelFactory
+    @Inject
+    lateinit var viewModel: PostViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,14 +28,12 @@ class CreatePostFragment : BaseFragment(R.layout.create_post_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        factory = DaggerAppComponent
-            .builder()
-            .appModule(AppModule(requireContext()))
-            .build()
-            .getPostViewFactory()
-
-        viewModel = ViewModelProvider(this, factory)[PostViewModel::class.java]
         setupListeners()
+    }
+
+    override fun setupDi() {
+        val app = requireActivity().application as Application
+        app.getComponent().inject(this)
     }
 
     private fun setupListeners() {
@@ -55,7 +51,11 @@ class CreatePostFragment : BaseFragment(R.layout.create_post_fragment) {
         ) {
             activity?.onBackPressed()
         } else {
-            Toast.makeText(requireContext(), getString(R.string.error_text_inputs), Toast.LENGTH_SHORT)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.error_text_inputs),
+                Toast.LENGTH_SHORT
+            )
                 .show()
         }
     }

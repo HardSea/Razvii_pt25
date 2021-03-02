@@ -3,40 +3,38 @@ package com.pmacademy.razvii_pt21.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.pmacademy.razvii_pt21.data.repository.PostRepository
 import com.pmacademy.razvii_pt21.domain.CheckPostRulesUseCase
 import com.pmacademy.razvii_pt21.domain.GetUiPostsUseCase
-import com.pmacademy.razvii_pt21.domain.mapper.PostUiMapper
 import com.pmacademy.razvii_pt21.ui.model.PostUiModel
-import io.reactivex.Observer
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class PostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
+class PostViewModel @Inject constructor(
+    private val repository: PostRepository,
+    private val getPostsUseCase: GetUiPostsUseCase
+) : ViewModel() {
 
     private val _postsLiveData = MutableLiveData<List<PostUiModel>>()
     val postsLiveData: LiveData<List<PostUiModel>> = _postsLiveData
 
-    private val getPostsUseCase: GetUiPostsUseCase = GetUiPostsUseCase(
-        postUiMapper = PostUiMapper(),
-        repository
-    )
-
     private fun insertPost(userId: Int, title: String, body: String) {
-        repository.insertUserPostLocal(userId, title, body)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertUserPostLocal(userId, title, body)
+        }
     }
 
     fun getPosts() {
-        getPostsUseCase.invoke()
-            ?.subscribe(object : Observer<List<PostUiModel>> {
-                override fun onNext(t: List<PostUiModel>) {
-                    _postsLiveData.value = t
-                }
-
-                override fun onSubscribe(d: Disposable) {}
-                override fun onError(e: Throwable) {}
-                override fun onComplete() {}
-            })
+        viewModelScope.launch(Dispatchers.IO) {
+            val posts = getPostsUseCase.invoke()
+            withContext(Dispatchers.Main) {
+                _postsLiveData.value = posts?.first()
+            }
+        }
     }
 
     fun createPost(title: String, body: String, userId: Int): Boolean {

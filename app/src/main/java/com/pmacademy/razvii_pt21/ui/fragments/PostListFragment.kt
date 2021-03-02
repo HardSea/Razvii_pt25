@@ -4,24 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.pmacademy.razvii_pt21.Application
 import com.pmacademy.razvii_pt21.R
 import com.pmacademy.razvii_pt21.databinding.PostListFragmentBinding
-import com.pmacademy.razvii_pt21.di.AppModule
-import com.pmacademy.razvii_pt21.di.DaggerAppComponent
 import com.pmacademy.razvii_pt21.ui.PostViewModel
-import com.pmacademy.razvii_pt21.ui.PostViewModelFactory
 import com.pmacademy.razvii_pt21.ui.adapter.PostAdapter
 import com.pmacademy.razvii_pt21.ui.model.PostUiModel
+import javax.inject.Inject
 
 class PostListFragment : BaseFragment(R.layout.post_list_fragment) {
 
-
-    private lateinit var factory: PostViewModelFactory
+    //@Inject
+    //private lateinit var factory: PostViewModelFactory
 
     private lateinit var binding: PostListFragmentBinding
-    private lateinit var viewModel: PostViewModel
+
+    @Inject
+    lateinit var viewModel: PostViewModel
+
     private val recyclerViewPostsAdapter = PostAdapter()
 
     override fun onCreateView(
@@ -36,20 +37,17 @@ class PostListFragment : BaseFragment(R.layout.post_list_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        factory = DaggerAppComponent
-            .builder()
-            .appModule(AppModule(requireContext()))
-            .build()
-            .getPostViewFactory()
-
-        viewModel = ViewModelProvider(this, factory)[PostViewModel::class.java]
-
         viewModel.getPosts()
         setupListeners()
         observePosts()
         initRecyclerView()
-
     }
+
+    override fun setupDi() {
+        val app = requireActivity().application as Application
+        app.getComponent().inject(this)
+    }
+
 
     private fun updatePostsRepos(items: List<PostUiModel>) {
         recyclerViewPostsAdapter.updatePosts(items)

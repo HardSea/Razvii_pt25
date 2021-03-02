@@ -6,8 +6,9 @@ import com.pmacademy.razvii_pt21.data.model.UserStatusType
 import com.pmacademy.razvii_pt21.ui.model.PostUiModel
 import com.pmacademy.razvii_pt21.ui.model.PostUiModelBanned
 import com.pmacademy.razvii_pt21.ui.model.PostUiModelNormal
+import javax.inject.Inject
 
-class PostUiMapper {
+class PostUiMapper @Inject constructor() {
 
     companion object {
         private const val bannedTitleString =

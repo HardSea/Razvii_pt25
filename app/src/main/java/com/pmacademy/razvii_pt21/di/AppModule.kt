@@ -3,16 +3,13 @@ package com.pmacademy.razvii_pt21.di
 import android.content.Context
 import androidx.annotation.NonNull
 import com.google.gson.GsonBuilder
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.pmacademy.razvii_pt21.data.UserInfoLocalDataProvider
 import com.pmacademy.razvii_pt21.data.mapper.PostMapper
 import com.pmacademy.razvii_pt21.data.repository.PostRepository
 import com.pmacademy.razvii_pt21.datasource.local.UserPostsDatabase
 import com.pmacademy.razvii_pt21.datasource.remote.api.PostsReposApi
-import com.pmacademy.razvii_pt21.ui.PostViewModelFactory
 import dagger.Module
 import dagger.Provides
-import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -32,17 +29,9 @@ class AppModule(@NonNull private val context: Context) {
     fun provideRetrofit(gsonConverterFactory: GsonConverterFactory): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://jsonplaceholder.typicode.com/")
-            .addCallAdapterFactory(
-                RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .addConverterFactory(gsonConverterFactory)
             .build()
     }
-
-    @Provides
-    @Singleton
-    fun provideViewModelFactory(repository: PostRepository): PostViewModelFactory =
-        PostViewModelFactory(repository)
-
 
     @Provides
     @Singleton

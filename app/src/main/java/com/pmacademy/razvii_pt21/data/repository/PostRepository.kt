@@ -6,9 +6,9 @@ import com.pmacademy.razvii_pt21.datasource.local.UserPost
 import com.pmacademy.razvii_pt21.datasource.local.UserPostsDatabase
 import com.pmacademy.razvii_pt21.datasource.remote.api.PostsReposApi
 import com.pmacademy.razvii_pt21.datasource.remote.model.UserPostResponse
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
@@ -18,31 +18,31 @@ class PostRepository @Inject constructor(
     private val postMapper: PostMapper
 ) {
 
-    private fun insertUserPostFromApi(userPost: UserPost) {
-        Completable.fromRunnable {
-            userPostsDatabase.getUserPostDao().insertUserPost(userPost)
-        }.subscribeOn(Schedulers.io()).subscribe()
-    }
+    private fun insertUserPostFromApi(userPost: UserPost) =
+        userPostsDatabase.getUserPostDao().insertUserPost(userPost)
 
-    fun insertUserPostLocal(userId: Int, title: String, body: String) {
-        Completable.fromRunnable {
-            val insertUser = UserPost(
+    fun insertUserPostLocal(userId: Int, title: String, body: String) =
+        userPostsDatabase.getUserPostDao().insertUserPost(
+            UserPost(
                 id = userPostsDatabase.getUserPostDao().getMinLocalUserPostId() - 1,
                 userId = userId,
                 title = title,
                 body = body
             )
-            userPostsDatabase.getUserPostDao().insertUserPost(insertUser)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        )
+
+    private fun getAllLocalUserPosts(): Flow<List<UserPost>> {
+        return userPostsDatabase.getUserPostDao().getAllUserPosts()
     }
 
-    private fun getAllLocalUserPosts(): Observable<List<UserPost>> =
-        userPostsDatabase.getUserPostDao().getAllUserPosts()
+    private fun getAllRemotePosts(): List<UserPostResponse>? {
+        return postsReposApi.getPostsList().execute().body()
+    }
 
-    fun getPostsAndUserInfo(): Observable<List<UserPostModel>>? {
-        return if (getAllLocalUserPosts().blockingFirst().isEmpty()) {
+    suspend fun getPostsAndUserInfo(): Flow<List<UserPostModel>>? {
+        return if (getAllLocalUserPosts().first().isEmpty()) {
             try {
-                saveDataToLocal(postsReposApi.getPostsList().blockingFirst())
+                saveDataToLocal(getAllRemotePosts())
                 getAllLocalUserPosts().map { postMapper.map(it) }
             } catch (e: Exception) {
                 null
