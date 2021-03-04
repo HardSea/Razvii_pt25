@@ -15,9 +15,6 @@ import javax.inject.Inject
 
 class PostListFragment : BaseFragment(R.layout.post_list_fragment) {
 
-    //@Inject
-    //private lateinit var factory: PostViewModelFactory
-
     private lateinit var binding: PostListFragmentBinding
 
     @Inject

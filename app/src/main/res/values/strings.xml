@@ -10,4 +10,7 @@
     <string name="post_body_hint_edit_text">Post body</string>
     <string name="btn_create_post_text">Create Post</string>
     <string name="error_text_inputs">Error. Please, check inputs</string>
+    <string name="post_title_error_message">Post title must be less than 50 and max then 3</string>
+    <string name="post_body_error_message">Post body must be less than 500 and max then 5</string>
+    <string name="banned_word_error_message">Title contains banned word</string>
 </resources>

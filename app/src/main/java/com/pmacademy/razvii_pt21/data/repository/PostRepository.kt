@@ -6,6 +6,7 @@ import com.pmacademy.razvii_pt21.datasource.local.UserPost
 import com.pmacademy.razvii_pt21.datasource.local.UserPostsDatabase
 import com.pmacademy.razvii_pt21.datasource.remote.api.PostsReposApi
 import com.pmacademy.razvii_pt21.datasource.remote.model.UserPostResponse
+import com.pmacademy.razvii_pt21.domain.Post
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -21,13 +22,13 @@ class PostRepository @Inject constructor(
     private fun insertUserPostFromApi(userPost: UserPost) =
         userPostsDatabase.getUserPostDao().insertUserPost(userPost)
 
-    fun insertUserPostLocal(userId: Int, title: String, body: String) =
+    fun insertUserPostLocal(post: Post) =
         userPostsDatabase.getUserPostDao().insertUserPost(
             UserPost(
                 id = userPostsDatabase.getUserPostDao().getMinLocalUserPostId() - 1,
-                userId = userId,
-                title = title,
-                body = body
+                userId = post.userId,
+                title = post.title,
+                body = post.body
             )
         )
 
