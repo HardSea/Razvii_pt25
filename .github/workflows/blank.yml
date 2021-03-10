@@ -7,15 +7,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
       - name: Run unit tests
         run: ./gradlew app:test
+
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
       - name: Run detekt tests
         run: ./gradlew app:detekt
