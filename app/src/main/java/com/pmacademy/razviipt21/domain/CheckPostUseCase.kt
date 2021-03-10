@@ -45,9 +45,12 @@ class CheckPostRulesUseCase {
     }
 
     private fun checkTitleForBannedString(title: String): Boolean {
+        var result = false
         bannedTitleStrings.forEach { bannedString ->
-            return bannedString.toLowerCase(Locale.getDefault()) in title.toLowerCase(Locale.getDefault())
+            result =
+                bannedString.toLowerCase(Locale.getDefault()) in title.toLowerCase(Locale.getDefault())
+            if (result) return true
         }
-        return false
+        return result
     }
 }

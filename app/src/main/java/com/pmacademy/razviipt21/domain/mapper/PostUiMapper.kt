@@ -11,9 +11,9 @@ import javax.inject.Inject
 class PostUiMapper @Inject constructor() {
 
     companion object {
-        private const val bannedTitleString =
+        const val bannedTitleString =
             "There could have been a post by user %1s, but he was banned"
-        private const val warningUserIdString = "With warning"
+        const val warningUserIdString = "With warning"
     }
 
     fun map(userPostResult: List<UserPostModel>): List<PostUiModel> {
