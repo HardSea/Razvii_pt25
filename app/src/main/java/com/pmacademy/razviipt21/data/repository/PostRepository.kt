@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-
 class PostRepository @Inject constructor(
     private val userPostsDatabase: UserPostsDatabase,
     private val postsReposApi: PostsReposApi,
@@ -21,9 +20,6 @@ class PostRepository @Inject constructor(
     private companion object {
         const val addIndexNumber = 1000
     }
-
-    private fun insertUserPostFromApi(userPost: UserPost) =
-        userPostsDatabase.getUserPostDao().insertUserPost(userPost)
 
     fun insertUserPostLocal(post: Post) =
         userPostsDatabase.getUserPostDao().insertUserPost(
@@ -35,14 +31,6 @@ class PostRepository @Inject constructor(
             )
         )
 
-    private fun getAllLocalUserPosts(): Flow<List<UserPost>> {
-        return userPostsDatabase.getUserPostDao().getAllUserPosts()
-    }
-
-    private fun getAllRemotePosts(): List<UserPostResponse>? {
-        return postsReposApi.getPostsList().execute().body()
-    }
-
     suspend fun getPostsAndUserInfo(): Flow<List<UserPostModel>> {
         return if (getAllLocalUserPosts().first().isEmpty()) {
             saveDataToLocal(getAllRemotePosts())
@@ -51,6 +39,15 @@ class PostRepository @Inject constructor(
             return this.getAllLocalUserPosts().map { postMapper.map(it) }
         }
     }
+
+    private fun getAllLocalUserPosts(): Flow<List<UserPost>> {
+        return userPostsDatabase.getUserPostDao().getAllUserPosts()
+    }
+
+    private fun getAllRemotePosts(): List<UserPostResponse>? {
+        return postsReposApi.getPostsList().execute().body()
+    }
+
 
     private fun saveDataToLocal(listOfPosts: List<UserPostResponse>?) {
         listOfPosts?.forEach { userPostResponse ->
@@ -64,5 +61,7 @@ class PostRepository @Inject constructor(
             )
         }
     }
-}
 
+    private fun insertUserPostFromApi(userPost: UserPost) =
+        userPostsDatabase.getUserPostDao().insertUserPost(userPost)
+}
